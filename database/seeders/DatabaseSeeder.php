@@ -4,8 +4,10 @@ namespace Database\Seeders;
 
 use App\Models\Contact;
 use App\Models\User;
+use Hash;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,17 +18,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
+        User::create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'email_verified_at' => now(),
+            'password' => static::$password ??= Hash::make('password'),
+            'remember_token' => Str::random(10),
         ]);
-
-        $users = User::factory(5)->create();
-
-        $users->each(function ($user) {
-            Contact::factory(rand(2, 5))->create([
-                'user_id' => $user->id,
-            ]);
-        });
     }
 }
